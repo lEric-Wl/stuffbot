@@ -8,7 +8,7 @@ import json
 with open('creds.json','r') as saves:
 		creds = json.load(saves)
 		saves.close()
-deeplKey = creds['discordKey']
+discordToken = creds['discordToken']
 
 intent = discord.Intents.all()
 bot = discord.Bot(intents = intent)
