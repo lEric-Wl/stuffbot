@@ -8,11 +8,11 @@ import json
 with open('creds.json','r') as saves:
 		creds = json.load(saves)
 		saves.close()
-discordToken = creds['discordToken']
 
+discordToken = creds['discordToken']
 intent = discord.Intents.all()
 bot = discord.Bot(intents = intent)
-allCogs = ['rickroll','weirdInsult','translator','fun','music']
+allCogs = ['rickroll','weirdInsult','translator','fun','music','name']
 
 @bot.event
 async def on_ready():
@@ -20,26 +20,26 @@ async def on_ready():
 	
 @bot.command(description = 'Not for you to use')
 async def reload(ctx, extension = None):
+	#Reloads all of the cogs so that the bot does not need to be rebooted to update the vod
 	
 	if not await bot.is_owner(ctx.author):
 		await ctx.respond('I told you in the description this is not for you to use, you Dingus!')
 		return
-	if extension is not None:
-		try:	
-			bot.reload_extension(f"cogs.{extension}")
-		except discord.ExtensionError as e:	
-			await ctx.respond(e,ephemeral = True)
-			return
-	else:
-		for stuff in allCogs:
-			try:
-				bot.reload_extension(f'cogs.{stuff}')	
-			except:
-				pass
+	
+	try:
+		if extension is not None:
+			bot.reload_extension(f'cogs.{extension}')
+		else:
+			for stuff in allCogs:
+				bot.reload_extension(f'cogs.{stuff}')
+		print("\n\n\n\n\n\n\n\n\n\nreloaded")
 		
-	print("reloaded")
-	await ctx.respond('Done',ephemeral = True)
-
+		await ctx.respond('Done',ephemeral = True)
+		
+	except discord.ExtensionError as e:
+		await ctx.respond(f"Error: {str(e)}", ephemeral=True)	
+	except Exception as e:
+		await ctx.respond(f"Unexpected error: {str(e)}", ephemeral=True)
   
 @bot.command()
 async def ping(ctx):
